@@ -30,7 +30,7 @@ router.get('/', function(req, res, next) {
 
 }).delete('/', function(req, res, next) {
   let id = req.body;
-  // 45W1RkFd6 haQsfFFg7
+ 
   id = id.usersId;
 
   db.get('users').remove((item) => item.usersId == id).write();
@@ -39,6 +39,15 @@ router.get('/', function(req, res, next) {
     status: 'success',
     data: id,
   })
-});
+}).put('/', function(req, res, next) {
+  let user = req.body;
+
+  db.get('users').find({usersId: user.usersId}).assign(user).write();
+
+  res.status(200).json({
+    status: 'success',
+    data: user,
+  })
+})
 
 module.exports = router;

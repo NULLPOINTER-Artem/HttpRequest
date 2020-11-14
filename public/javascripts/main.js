@@ -35,6 +35,16 @@ class UserApi {
             },
         })
     }
+
+    static updateUser(usersId, user) {
+        return fetch(UserApi.baseUrl, {
+            method: "put",
+            body: JSON.stringify({...user, usersId}),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            },
+        })
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -43,7 +53,31 @@ document.addEventListener('DOMContentLoaded', () => {
     let usersContainer = document.querySelector('#users');
     let inputForDelete = document.querySelector('#deleteInput');
     let deleteBtn = document.querySelector('#deleteBtn');
+    let formUpd = document.querySelector('#updateForm');
     // console.dir(form.elements);
+
+    formUpd.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        let { id, name, email, password } = formUpd.elements;
+        let user = new User({
+            name: name.value,
+            email: email.value,
+            password: password.value,
+        }); 
+
+        let usersId = id.value;
+
+        try {
+            UserApi.updateUser(usersId, user).then((res) => {
+                return res.json();
+            }).then((data) => {
+                console.log(data);
+            });
+        } catch(error) {
+            console.log(error);
+        }
+    })
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -88,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             inputForDelete.style.display = "none";
             deleteBtn.style.display = "none";
+            formUpd.style.display = "none";
         }
         if(e.target.id == "get") {
             usersContainer.style.display = "block";
@@ -95,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             inputForDelete.style.display = "none";
             deleteBtn.style.display = "none";
+            formUpd.style.display = "none";
             
             renderUserList()
         }
@@ -103,6 +139,14 @@ document.addEventListener('DOMContentLoaded', () => {
             usersContainer.style.display = "none";
             inputForDelete.style.display = "block";
             deleteBtn.style.display = "block";
+            formUpd.style.display = "none";
+        }
+        if(e.target.id == "update") {
+            form.style.display = "none";
+            usersContainer.style.display = "none";
+            inputForDelete.style.display = "none";
+            deleteBtn.style.display = "none";
+            formUpd.style.display = "block";
         }
     })
 
