@@ -31,16 +31,13 @@ router.get('/', function(req, res, next) {
 }).delete('/', function(req, res, next) {
   let id = req.body;
   // 45W1RkFd6 haQsfFFg7
-  
-  let selectedUser = db.get('users').find((item) => {
-    return item.usersId == id.usersId;
-  })  
+  id = id.usersId;
 
-  db.get('users').remove(selectedUser).write();
+  db.get('users').remove((item) => item.usersId == id).write();
   
   res.status(200).json({
     status: 'success',
-    data: selectedUser,
+    data: id,
   })
 });
 
